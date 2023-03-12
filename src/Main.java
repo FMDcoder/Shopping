@@ -6,15 +6,21 @@ import javax.swing.*;
 public class Main extends JFrame implements ActionListener{
 	
 	public static MySQL SQL = new MySQL();
-	public JPanel panel = new JPanel();
+	public JPanel panel = new JPanel(),
+			currentPanel = null;
 	
 	public View view = new View();
+	public Shop shop = new Shop();
+	public Locations location = new Locations();
+	public CreateShopping cs = new CreateShopping();
+	
 	
 	public void window() {
 		this.setSize(500, 500);
 		this.setLocationRelativeTo(null);
 		this.setTitle("Affär Hanterare");
 		this.setResizable(false);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		this.add(panel);
 		panel.setLayout(null);
@@ -41,6 +47,9 @@ public class Main extends JFrame implements ActionListener{
 			sum += textlength;
 		}
 		
+		currentPanel = view.getPanel();
+		panel.add(currentPanel);
+		
 		this.setVisible(true);
 	}
 	
@@ -60,8 +69,44 @@ public class Main extends JFrame implements ActionListener{
 			
 			switch (text) {
 			case "Handlingar":
+				panel.remove(currentPanel);
+				currentPanel = null;
+				
+				currentPanel = view.getPanel();
+				panel.add(currentPanel);
+				panel.revalidate();
+				panel.repaint();
 				break;
-
+				
+			case "Affärer":
+				panel.remove(currentPanel);
+				currentPanel = null;
+				
+				currentPanel = shop.getPanel();
+				panel.add(currentPanel);
+				panel.revalidate();
+				panel.repaint();
+				break;
+				
+			case "Platser":
+				panel.remove(currentPanel);
+				currentPanel = null;
+				
+				currentPanel = location.getPanel();
+				panel.add(currentPanel);
+				panel.revalidate();
+				panel.repaint();
+				break;
+				
+			case "Skapa Handel":
+				panel.remove(currentPanel);
+				currentPanel = null;
+				
+				currentPanel = cs.getPanel();
+				panel.add(currentPanel);
+				panel.revalidate();
+				panel.repaint();
+				break;
 			default:
 				break;
 			}

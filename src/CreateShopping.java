@@ -1,15 +1,14 @@
 import java.awt.event.*;
 import javax.swing.*;
 
-public class View implements ActionListener {
-	
+public class CreateShopping implements ActionListener {
 	public JPanel panel = new JPanel();
 	
-	public View() {
+	public CreateShopping() {
 		panel.setBounds(0, 30, 500, 470);
 		
 		JLabel label = new JLabel(
-				"<html><h1>Handlingar</h1></html>");
+				"<html><h1>Skapa Handel</h1></html>");
 		
 		label.setBounds(50, 50, 400, 50);
 		panel.add(label);
