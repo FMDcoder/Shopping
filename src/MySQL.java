@@ -42,12 +42,10 @@ public class MySQL {
 			Statement state = con.createStatement();
 			ResultSet result = state.executeQuery(sql);
 			
-			disconnect();
 			return result;
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			disconnect();
 		}
 		return null;
 	}
