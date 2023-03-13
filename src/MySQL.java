@@ -35,7 +35,7 @@ public class MySQL {
 		}
 	}
 	
-	public ResultSet sendQuery(String sql) {
+	public ResultSet sendResultQuery(String sql) {
 		try {
 			connect();
 			
@@ -49,5 +49,18 @@ public class MySQL {
 			disconnect();
 		}
 		return null;
+	}
+	
+	public void sendVoidQuery(String sql) {
+		try {
+			connect();
+			
+			Statement state = con.createStatement();
+			state.execute(sql);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			disconnect();
+		}
 	}
 }

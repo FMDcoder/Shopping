@@ -24,8 +24,6 @@ public class View implements ActionListener {
 		dtm.setColumnIdentifiers(
 				new Object[]{"Datum", "Affär", "Plats", "Tid", "Kostnad"});
 		
-		dtm.addRow(new Object[] {"2022", "fafw", "gwaf", "fadfwa", "afwfw"});
-		
 		label.setBounds(50, 0, 400, 40);
 		label.setHorizontalAlignment(JLabel.CENTER);
 		panel.add(label);
@@ -41,7 +39,7 @@ public class View implements ActionListener {
 	
 	public JPanel getPanel() {
 		
-		ResultSet result = Main.SQL.sendQuery(
+		ResultSet result = Main.SQL.sendResultQuery(
 				"select Datum, AffarNamn, PlatsNamn, Tid, Kostnad from \r\n"
 				+ "(((datum join handel on HandelDatumId = DatumId)\r\n"
 				+ "join affar on HandelAffarId = AffarId)\r\n"
@@ -85,7 +83,13 @@ public class View implements ActionListener {
 			String date = tabel.getValueAt(selected, 0).toString(),
 				   time = tabel.getValueAt(selected, 3).toString();
 			
-			System.out.println(date+" "+time);
+			Main.SQL.sendVoidQuery(
+					"delete from handel where HandelDatumId = (\r\n"
+					+ "	select DatumId from Datum where Datum = '"+date+"')\r\n"
+					+ "and \r\n"
+					+ "	tid = '"+time+"';");
+			
+			getPanel();
 		}
 	}
 }
