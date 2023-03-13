@@ -1,16 +1,18 @@
-import java.awt.FlowLayout;
-import java.awt.Label;
+import java.awt.Font;
 import java.awt.event.*;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-
 import javax.swing.*;
+import javax.swing.table.*;
 
 public class View implements ActionListener {
 	
 	public JPanel panel = new JPanel();
-	public JScrollPane scroll = new JScrollPane();
+	
+	public DefaultTableModel dtm = new DefaultTableModel(); 
+	public JTable tabel = new JTable(dtm);
+	
+	public JScrollPane scroll = new JScrollPane(tabel);
+	public JButton tabort = new JButton("Ta bort rad");
 	
 	public View() {
 		panel.setBounds(0, 30, 500, 470);
@@ -19,9 +21,22 @@ public class View implements ActionListener {
 		JLabel label = new JLabel(
 				"<html><h1>Handlingar</h1></html>");
 		
-		label.setBounds(50, 10, 400, 50);
+		dtm.setColumnIdentifiers(
+				new Object[]{"Datum", "Affär", "Plats", "Tid", "Kostnad"});
+		
+		dtm.addRow(new Object[] {"2022", "fafw", "gwaf", "fadfwa", "afwfw"});
+		
+		label.setBounds(50, 0, 400, 40);
 		label.setHorizontalAlignment(JLabel.CENTER);
 		panel.add(label);
+		
+		tabort.setBounds(50, 360, 100, 30);
+		tabort.addActionListener(this);
+		
+		panel.add(tabort);
+		
+		scroll.setBounds(50, 40, 400, 300);
+		panel.add(scroll);
 	}
 	
 	public JPanel getPanel() {
@@ -30,42 +45,47 @@ public class View implements ActionListener {
 				"select Datum, AffarNamn, PlatsNamn, Tid, Kostnad from \r\n"
 				+ "(((datum join handel on HandelDatumId = DatumId)\r\n"
 				+ "join affar on HandelAffarId = AffarId)\r\n"
-				+ "join plats on PlatsId = AffarPlats);");
-		
-		ArrayList<String[]> list = new ArrayList<>();
-		
-		String[] rowsName = {"Datum", "Affär", "Plats", "Tid", "Kostnad"};
+				+ "join plats on PlatsId = AffarPlats) order by Datum asc;");
 		
 		try {
-			while(result.next()) {
-				String[] row = new String[5];
-				row[0] = result.getString("Datum");
-				row[1] = result.getString("AffarNamn");
-				row[2] = result.getString("PlatsNamn");
-				row[3] = result.getString("Tid");
-				row[4] = result.getString("Kostnad");
-				
-				list.add(row);
+			dtm.setRowCount(0);
+			while(result.next()) {	
+				dtm.addRow(new Object[] {
+					result.getString("Datum"),
+					result.getString("AffarNamn"),
+					result.getString("PlatsNamn"),
+					result.getString("Tid"),
+					result.getString("Kostnad")
+				});
 			}
+			
 			result.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		String[][] data = new String[list.size()][5];
-		data = list.toArray(data);
-		
-		JTable tabel = new JTable(data, rowsName);
-		panel.remove(scroll);
-		scroll = new JScrollPane(tabel);
-		scroll.setBounds(50, 60, 400, 300);
-		panel.add(scroll);
 		
 		return panel;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+		if(e.getSource() == tabort) {
+			int selected = tabel.getSelectedRow();
+			
+			if(selected == -1) {
+				JOptionPane.showMessageDialog(
+						null, 
+						"Ingen rad har blivit vald", 
+						"Error", 
+						JOptionPane.ERROR_MESSAGE
+					);
+				return;
+			}
+			
+			String date = tabel.getValueAt(selected, 0).toString(),
+				   time = tabel.getValueAt(selected, 3).toString();
+			
+			System.out.println(date+" "+time);
+		}
 	}
 }

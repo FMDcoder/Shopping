@@ -46,6 +46,7 @@ public class MySQL {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			disconnect();
 		}
 		return null;
 	}
