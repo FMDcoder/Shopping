@@ -10,23 +10,24 @@ public class View implements ActionListener {
 	
 	public DefaultTableModel dtm = new DefaultTableModel(); 
 	public JTable tabel = new JTable(dtm);
-	
 	public JScrollPane scroll = new JScrollPane(tabel);
+	
 	public JButton tabort = new JButton("Ta bort rad");
 	
 	public View() {
 		panel.setBounds(0, 30, 500, 470);
 		panel.setLayout(null);
 		
+		
 		JLabel label = new JLabel(
 				"<html><h1>Handlingar</h1></html>");
-		
-		dtm.setColumnIdentifiers(
-				new Object[]{"Datum", "Affär", "Plats", "Tid", "Kostnad"});
 		
 		label.setBounds(50, 0, 400, 40);
 		label.setHorizontalAlignment(JLabel.CENTER);
 		panel.add(label);
+		
+		dtm.setColumnIdentifiers(
+				new Object[]{"Datum", "Affär", "Plats", "Tid", "Kostnad"});
 		
 		tabort.setBounds(50, 360, 100, 30);
 		tabort.addActionListener(this);
