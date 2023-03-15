@@ -11,7 +11,7 @@ public class Shop implements ActionListener {
 	public JTable shoplist = new JTable(dtm);
 	public JScrollPane shops = new JScrollPane(shoplist);
 	
-	public JButton submit = new JButton("Lägg till affär");
+	public JButton remove = new JButton("Ta bort rad");
 	
 	public Shop() {
 		panel.setBounds(0, 30, 500, 470);
@@ -27,8 +27,12 @@ public class Shop implements ActionListener {
 		dtm.setColumnIdentifiers(new Object[] {"Affär", "Plats"});
 		
 		shops.setBounds(50, 40, 400, 300);
-	
 		panel.add(shops);
+		
+		remove.setBounds(50, 360, 100, 30);
+		remove.addActionListener(this);
+		
+		panel.add(remove);
 	}
 	
 	public JPanel getPanel() {
@@ -59,6 +63,35 @@ public class Shop implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+		if(e.getSource() == remove) {
+			int selected = shoplist.getSelectedRow();
+			
+			if(selected == -1) {
+				JOptionPane.showMessageDialog(
+						null, 
+						"Ingen rad har blivit vald", 
+						"Error", 
+						JOptionPane.ERROR_MESSAGE
+					);
+				return;
+			}
+			
+			String shopName = shoplist.getValueAt(selected, 0).toString(),
+					locationName = shoplist.getValueAt(selected, 1).toString();
+			
+			Main.SQL.sendVoidQuery(
+					"delete from handel where HandelAffarId = \r\n"
+					+ "(select AffarId from Affar where AffarNamn = '"+shopName+"' and AffarPlats = (\r\n"
+					+ "		select PlatsId from Plats where PlatsNamn = '"+locationName+"'\r\n"
+					+ "	)\r\n"
+					+ ");\r\n"
+					+ "\r\n"
+					+ "delete from affar where AffarNamn = '"+shopName+"' and AffarPlats = (\r\n"
+					+ "		select PlatsId from Plats where PlatsNamn = '"+locationName+"'\r\n"
+					+ ");"
+			);
+			
+			getPanel();
+		}
 	}
 }

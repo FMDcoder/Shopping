@@ -8,10 +8,9 @@ public class View implements ActionListener {
 	public JPanel panel = new JPanel();
 	
 	public DefaultTableModel dtm = new DefaultTableModel(); 
-	public JTable tabel = new JTable(dtm);
-	public JScrollPane scroll = new JScrollPane(tabel);
-	
-	public JButton tabort = new JButton("Ta bort rad");
+	public JTable paymentTable = new JTable(dtm);
+	public JScrollPane scroll = new JScrollPane(paymentTable);
+	public JButton remove = new JButton("Ta bort rad");
 	
 	public View() {
 		panel.setBounds(0, 30, 500, 470);
@@ -28,10 +27,9 @@ public class View implements ActionListener {
 		dtm.setColumnIdentifiers(
 				new Object[]{"Datum", "Affär", "Plats", "Tid", "Kostnad"});
 		
-		tabort.setBounds(50, 360, 100, 30);
-		tabort.addActionListener(this);
-		
-		panel.add(tabort);
+		remove.setBounds(50, 360, 100, 30);
+		remove.addActionListener(this);
+		panel.add(remove);
 		
 		scroll.setBounds(50, 40, 400, 300);
 		panel.add(scroll);
@@ -67,8 +65,8 @@ public class View implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == tabort) {
-			int selected = tabel.getSelectedRow();
+		if(e.getSource() == remove) {
+			int selected = paymentTable.getSelectedRow();
 			
 			if(selected == -1) {
 				JOptionPane.showMessageDialog(
@@ -80,9 +78,9 @@ public class View implements ActionListener {
 				return;
 			}
 			
-			String date = tabel.getValueAt(selected, 0).toString(),
-				   time = tabel.getValueAt(selected, 3).toString();
-			
+			String date = paymentTable.getValueAt(selected, 0).toString(),
+				   time = paymentTable.getValueAt(selected, 3).toString();
+						
 			Main.SQL.sendVoidQuery(
 					"delete from handel where HandelDatumId = (\r\n"
 					+ "	select DatumId from Datum where Datum = '"+date+"')\r\n"
