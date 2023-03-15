@@ -24,10 +24,10 @@ public class Shop implements ActionListener {
 		label.setHorizontalAlignment(JLabel.CENTER);
 		panel.add(label);
 		
-		dtm.setColumnIdentifiers(new Object[]{"Affär", "Plats"});
+		dtm.setColumnIdentifiers(new Object[] {"Affär", "Plats"});
 		
-		shops.setBounds(250, 40, 220, 350);
-		
+		shops.setBounds(50, 40, 400, 300);
+	
 		panel.add(shops);
 	}
 	
@@ -40,14 +40,15 @@ public class Shop implements ActionListener {
 		
 		try {
 			
-			dtm.setColumnCount(0);
+			dtm.setRowCount(0);
 			while(resultPlaces.next()) {
 				dtm.addRow(new Object[] {
-						resultPlaces.getString("AffarNamn"),
-						resultPlaces.getString("PlatsNamn")
+					resultPlaces.getString("AffarNamn"),
+					resultPlaces.getString("PlatsNamn")
 				});
 			}
 			resultPlaces.close();
+			System.out.println(dtm.getColumnCount());
 			
 		} catch (Exception e) {
 			e.printStackTrace();

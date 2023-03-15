@@ -12,7 +12,6 @@ public class Main extends JFrame implements ActionListener{
 	public View view = new View();
 	public Shop shop = new Shop();
 	public Locations location = new Locations();
-	public CreateShopping cs = new CreateShopping();
 	
 	
 	public void window() {
@@ -29,7 +28,6 @@ public class Main extends JFrame implements ActionListener{
 			new JButton("Handlingar"),
 			new JButton("Affärer"),
 			new JButton("Platser"),
-			new JButton("Skapa Handel")
 		};
 		
 		int sum = 0;
@@ -93,16 +91,6 @@ public class Main extends JFrame implements ActionListener{
 				currentPanel = null;
 				
 				currentPanel = location.getPanel();
-				panel.add(currentPanel);
-				panel.revalidate();
-				panel.repaint();
-				break;
-				
-			case "Skapa Handel":
-				panel.remove(currentPanel);
-				currentPanel = null;
-				
-				currentPanel = cs.getPanel();
 				panel.add(currentPanel);
 				panel.revalidate();
 				panel.repaint();
