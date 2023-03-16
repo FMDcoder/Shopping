@@ -17,7 +17,7 @@ public class Main extends JFrame implements ActionListener{
 	public void window() {
 		this.setSize(500, 500);
 		this.setLocationRelativeTo(null);
-		this.setTitle("Aff√§r Hanterare");
+		this.setTitle("Aff‰r Hanterare");
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		

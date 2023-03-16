@@ -52,11 +52,12 @@ public class Shop implements ActionListener {
 				});
 			}
 			resultPlaces.close();
-			System.out.println(dtm.getColumnCount());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		Main.SQL.disconnect();
 		
 		return panel;
 	}

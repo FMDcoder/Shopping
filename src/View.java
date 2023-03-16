@@ -27,12 +27,12 @@ public class View implements ActionListener {
 		dtm.setColumnIdentifiers(
 				new Object[]{"Datum", "Affär", "Plats", "Tid", "Kostnad"});
 		
+		scroll.setBounds(50, 40, 400, 300);
+		panel.add(scroll);
+		
 		remove.setBounds(50, 360, 100, 30);
 		remove.addActionListener(this);
 		panel.add(remove);
-		
-		scroll.setBounds(50, 40, 400, 300);
-		panel.add(scroll);
 	}
 	
 	public JPanel getPanel() {
@@ -59,6 +59,8 @@ public class View implements ActionListener {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		Main.SQL.disconnect();
 		
 		return panel;
 	}
