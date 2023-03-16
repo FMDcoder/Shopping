@@ -18,13 +18,13 @@ public class Shop implements ActionListener {
 		panel.setLayout(null);
 		
 		JLabel label = new JLabel(
-				"<html><h1>Aff√§rer</h1></html>");
+				"<html><h1>Aff‰rer</h1></html>");
 		
 		label.setBounds(50, 0, 400, 40);
 		label.setHorizontalAlignment(JLabel.CENTER);
 		panel.add(label);
 		
-		dtm.setColumnIdentifiers(new Object[] {"Aff√§r", "Plats"});
+		dtm.setColumnIdentifiers(new Object[] {"Aff‰rer", "Plats"});
 		
 		shops.setBounds(50, 40, 400, 300);
 		panel.add(shops);
@@ -80,17 +80,15 @@ public class Shop implements ActionListener {
 					locationName = shoplist.getValueAt(selected, 1).toString();
 			
 			Main.SQL.sendVoidQuery(
-					"delete from handel where HandelAffarId = \r\n"
-					+ "(select AffarId from Affar where AffarNamn = '"+shopName+"' and AffarPlats = (\r\n"
-					+ "		select PlatsId from Plats where PlatsNamn = '"+locationName+"'\r\n"
-					+ "	)\r\n"
-					+ ");\r\n"
-					+ "\r\n"
-					+ "delete from affar where AffarNamn = '"+shopName+"' and AffarPlats = (\r\n"
-					+ "		select PlatsId from Plats where PlatsNamn = '"+locationName+"'\r\n"
+					"delete from handel where HandelAffarId = "
+					+ "(select AffarId from Affar where AffarNamn = '"+shopName+"' and AffarPlats = ("
+					+ "select PlatsId from Plats where PlatsNamn = '"+locationName+"'"
+					+ "));");
+			
+			Main.SQL.sendVoidQuery("delete from Affar where AffarNamn = '"+shopName+"' and AffarPlats = ("
+					+"select PlatsId from Plats where PlatsNamn = '"+locationName+"'"
 					+ ");"
 			);
-			
 			getPanel();
 		}
 	}

@@ -26,7 +26,7 @@ public class Main extends JFrame implements ActionListener{
 		
 		JButton[] buttons = {
 			new JButton("Handlingar"),
-			new JButton("Aff√§rer"),
+			new JButton("Aff‰rer"),
 			new JButton("Platser"),
 		};
 		
@@ -76,7 +76,7 @@ public class Main extends JFrame implements ActionListener{
 				panel.repaint();
 				break;
 				
-			case "Aff√§rer":
+			case "Aff‰rer":
 				panel.remove(currentPanel);
 				currentPanel = null;
 				

@@ -11,6 +11,10 @@ public class MySQL {
 	
 	private Connection con;
 	
+	public MySQL () {
+		connect();
+	}
+	
 	private void connect() {
 		try {
 			con = DriverManager.getConnection(url, username, password);
@@ -37,7 +41,6 @@ public class MySQL {
 	
 	public ResultSet sendResultQuery(String sql) {
 		try {
-			connect();
 			
 			Statement state = con.createStatement();
 			ResultSet result = state.executeQuery(sql);
@@ -46,21 +49,18 @@ public class MySQL {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			disconnect();
 		}
 		return null;
 	}
 	
 	public void sendVoidQuery(String sql) {
 		try {
-			connect();
-			
 			Statement state = con.createStatement();
 			state.execute(sql);
+			state.close();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			disconnect();
 		}
 	}
 }

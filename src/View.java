@@ -25,7 +25,7 @@ public class View implements ActionListener {
 		panel.add(label);
 		
 		dtm.setColumnIdentifiers(
-				new Object[]{"Datum", "Aff√§r", "Plats", "Tid", "Kostnad"});
+				new Object[]{"Datum", "Aff‰r", "Plats", "Tid", "Kostnad"});
 		
 		remove.setBounds(50, 360, 100, 30);
 		remove.addActionListener(this);
