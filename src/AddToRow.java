@@ -131,26 +131,41 @@ public class AddToRow extends JFrame implements ActionListener{
 						String SQLaddPlace = "insert into Plats(PlatsNamn) values";
 						
 						for(int i = 1; i < locationList.size(); i++) {
-							
-							try {
-								ResultSet alreadyThere = Main.SQL
-									.sendResultQuery(
-									"select * from plats where PlatsNamn = '"+
-									locationList.get(i)+"'");
-								
-								if(alreadyThere.next()) {
-									continue;
-								}
-								
-							} catch (Exception error) {
-								error.printStackTrace();
-							}
-							
-							
 							if(i + 1 < locationList.size()) {
+								try {
+									ResultSet alreadyThere = Main.SQL
+										.sendResultQuery(
+										"select * from plats where PlatsNamn = '"+
+										locationList.get(i)+"'");
+									
+									if(alreadyThere.next()) {
+										alreadyThere.close();
+										continue;
+									}
+									alreadyThere.close();
+									
+								} catch (Exception error) {
+									error.printStackTrace();
+								}
 								SQLaddPlace += "('"+locationList.get(i)+"'),";
 							}
 							else {
+								try {
+									ResultSet alreadyThere = Main.SQL
+										.sendResultQuery(
+										"select * from plats where PlatsNamn = '"+
+										locationList.get(i)+"'");
+									
+									if(alreadyThere.next()) {
+										alreadyThere.close();
+										SQLaddPlace = SQLaddPlace.replaceFirst(".$", ";");
+										continue;
+									}
+									alreadyThere.close();
+									
+								} catch (Exception error) {
+									error.printStackTrace();
+								}
 								SQLaddPlace += "('"+locationList.get(i)+"');";
 							}
 						}
