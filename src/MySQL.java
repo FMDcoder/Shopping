@@ -18,8 +18,8 @@ public class MySQL {
 			
 			JOptionPane.showMessageDialog(
 					null, 
-					"Could not connect to server", 
-					"Error", JOptionPane.OK_OPTION, 
+					"Kunde inte koppla till servern: "+e.getErrorCode(), 
+					"Error", JOptionPane.ERROR_MESSAGE, 
 					null
 			);
 			

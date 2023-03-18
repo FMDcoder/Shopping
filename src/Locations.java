@@ -4,14 +4,15 @@ import java.sql.ResultSet;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-public class Locations implements ActionListener {
+public class Locations extends Scene implements ActionListener {
 	public JPanel panel = new JPanel();
 	
 	public DefaultTableModel dtm = new DefaultTableModel();
 	public JTable locationTable = new JTable(dtm);
 	public JScrollPane locationView = new JScrollPane(locationTable);
 	
-	public JButton remove = new JButton("Ta bort rad");
+	public JButton remove = new JButton("Ta bort rad"),
+			add = new JButton("Lägg till");
 	
 	public Locations() {
 		panel.setBounds(0, 30, 500, 470);
@@ -31,6 +32,11 @@ public class Locations implements ActionListener {
 		
 		remove.setBounds(50, 360, 100, 30);
 		remove.addActionListener(this);
+		
+		add.setBounds(350, 360, 100, 30);
+		add.addActionListener(this);
+		
+		panel.add(add);
 		panel.add(remove);
 	}
 	
@@ -76,6 +82,10 @@ public class Locations implements ActionListener {
 			
 			Main.SQL.sendVoidQuery("delete from Plats where PlatsNamn = '"+locationName+"';");
 			getPanel();
+		}
+		
+		if(e.getSource() == add) {
+			new AddToRow(AddToRow.TypeOfAdd.LOCATION, this);
 		}
 	}
 }

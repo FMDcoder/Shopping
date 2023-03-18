@@ -4,14 +4,15 @@ import java.sql.ResultSet;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-public class Shop implements ActionListener {
+public class Shop extends Scene implements ActionListener {
 	public JPanel panel = new JPanel();
 	
 	public DefaultTableModel dtm = new DefaultTableModel();
 	public JTable shoplist = new JTable(dtm);
 	public JScrollPane shops = new JScrollPane(shoplist);
 	
-	public JButton remove = new JButton("Ta bort rad");
+	public JButton remove = new JButton("Ta bort rad"),
+			add = new JButton("Lägg till");
 	
 	public Shop() {
 		panel.setBounds(0, 30, 500, 470);
@@ -32,6 +33,10 @@ public class Shop implements ActionListener {
 		remove.setBounds(50, 360, 100, 30);
 		remove.addActionListener(this);
 		
+		add.setBounds(350, 360, 100, 30);
+		add.addActionListener(this);
+		
+		panel.add(add);
 		panel.add(remove);
 	}
 	
@@ -91,6 +96,10 @@ public class Shop implements ActionListener {
 					+ ");"
 			);
 			getPanel();
+		}
+		
+		if(e.getSource() == add) {
+			new AddToRow(AddToRow.TypeOfAdd.SHOP, this);
 		}
 	}
 }

@@ -6,7 +6,7 @@ import javax.swing.*;
 public class Main extends JFrame implements ActionListener{
 	
 	public static MySQL SQL = new MySQL();
-	public JPanel panel = new JPanel(),
+	public static JPanel panel = new JPanel(),
 			currentPanel = null;
 	
 	public View view = new View();
