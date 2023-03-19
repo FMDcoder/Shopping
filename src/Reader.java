@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
@@ -28,8 +27,8 @@ public class Reader {
 				if(!line.matches(regex)) {
 					list.clear();
 					list.add("1");
-					list.add("Ogilitga karaktärer finns i fältet, endast A-Ö och blanksteg i filen "
-							+ "\n"+file.getAbsolutePath()+"\npå Linje: "+count+"\n"+line);
+					list.add("Ogilitga karaktärer finns i raden"
+							+ "\n"+file.getAbsolutePath()+"\npå Linje: "+count);
 					
 					br.close();
 					is.close();

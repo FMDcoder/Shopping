@@ -2,9 +2,8 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.LinkedList;
-
-import java.sql.*;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -18,10 +17,9 @@ public class AddToRow extends JFrame implements ActionListener{
 	public JButton submit = new JButton("Lägg till"),
 			submitFile = new JButton("Fil inlägg");
 	
-	public JTextField locationField = new JTextField();
+	public JTextField inputField = new JTextField();
 	
-	public JLabel titel = new JLabel(),
-					description = new JLabel();
+	public JComboBox altoption;
 	
 	public TypeOfAdd addMethod;
 	public Scene owner;
@@ -68,31 +66,93 @@ public class AddToRow extends JFrame implements ActionListener{
 	}
 	
 	public void shopComponents() {
+		JLabel titel = new JLabel();
+		titel.setText("Lägg till affär");
+		titel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
+		titel.setBounds(0, 10, 300, 50);
+		titel.setHorizontalAlignment(JLabel.CENTER);
+		this.add(titel);
 		
+		JLabel shopDescription = new JLabel();
+		shopDescription.setText("Affär");
+		shopDescription.setBounds(50, 55, 200, 30);
+		this.add(shopDescription);
+		
+		inputField.setBounds(50, 85, 200, 30);
+		this.add(inputField);
+		
+		JLabel locationDescription = new JLabel();
+		locationDescription.setText("Plats");
+		locationDescription.setBounds(50, 115, 200, 30);
+		this.add(locationDescription);
+		
+		ResultSet locations = Main.SQL.sendResultQuery(
+				"select PlatsNamn from plats");
+		
+		try {
+			ArrayList<String> locationList = new ArrayList<>();
+			
+			while(locations.next()) {
+				locationList.add(locations.getString("PlatsNamn"));
+			}
+			
+			String[] arrayLocations = new String[locationList.size()];
+			arrayLocations = locationList.toArray(arrayLocations);
+			
+			altoption = new JComboBox<String>(arrayLocations);
+			altoption.setBounds(50, 145, 200, 30);
+			this.add(altoption);
+			
+			locations.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void locationComponents() {
 		
+		JLabel titel = new JLabel();
 		titel.setText("Lägg till plats");
 		titel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
 		titel.setBounds(0, 10, 300, 50);
 		titel.setHorizontalAlignment(JLabel.CENTER);
 		this.add(titel);
 		
-		description.setText("Plats");
-		description.setBounds(50, 85, 200, 30);
-		this.add(description);
+		JLabel locationDescription = new JLabel();
+		locationDescription.setText("Plats");
+		locationDescription.setBounds(50, 85, 200, 30);
+		this.add(locationDescription);
 		
-		locationField.setBounds(50, 115, 200, 30);
-		this.add(locationField);
+		inputField.setBounds(50, 115, 200, 30);
+		this.add(inputField);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == submit) {
 			
+			if(addMethod == TypeOfAdd.SHOP) {
+				String shop = inputField.getText(),
+						place = (String)altoption.getSelectedItem();
+				
+				if(!shop.matches("[A-Za-zåäöÅÄÖ ]+")) {
+					JOptionPane.showMessageDialog(
+							null, 
+							"Ogilitga karaktärer finns i fältet, endast A-Ö och blanksteg", 
+							"Error", JOptionPane.ERROR_MESSAGE, 
+							null
+					);
+					return;
+				}
+				
+				Main.SQL.sendVoidQuery("insert into affar(AffarNamn, AffarPlats) "
+						+ "values('"+shop+"', "
+								+ "(select PlatsId from Plats "
+								+ "where PlatsNamn = '"+place+"'));");
+			}
+			
 			if(addMethod == TypeOfAdd.LOCATION) {
-				String loc = locationField.getText();
+				String loc = inputField.getText();
 				
 				if(!loc.matches("[A-Za-zåäöÅÄÖ ]+")) {
 					JOptionPane.showMessageDialog(
