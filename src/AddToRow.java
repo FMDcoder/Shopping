@@ -135,7 +135,7 @@ public class AddToRow extends JFrame implements ActionListener{
 				String shop = inputField.getText(),
 						place = (String)altoption.getSelectedItem();
 				
-				if(!shop.matches("[A-Za-zåäöÅÄÖ ]+")) {
+				if(!shop.matches("[A-Za-z0-9åäöÅÄÖ ]+")) {
 					JOptionPane.showMessageDialog(
 							null, 
 							"Ogilitga karaktärer finns i fältet, endast A-Ö och blanksteg", 
@@ -181,40 +181,42 @@ public class AddToRow extends JFrame implements ActionListener{
 			FileNameExtensionFilter fnef = new FileNameExtensionFilter("Text Files", "txt");
 			jfile.setFileFilter(fnef);
 			
-			if(addMethod == TypeOfAdd.LOCATION) {
-				if(jfile.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					LinkedList<String> locationList = Reader.readFile(
-							jfile.getSelectedFile(), "[A-Za-zåäöÅÄÖ ]+");
+			if(jfile.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+				
+				if(addMethod == TypeOfAdd.SHOP) {
+					LinkedList<String> affarList = Reader.readFile(
+						jfile.getSelectedFile(), "^[A-Za-z0-9åäöÅÄÖ ]+,[A-Za-z0-9åäöÅÄÖ ]+$");
 					
-					if(locationList.get(0).equals("0")) {
+					if(affarList.get(0).equals("0")) {
 						
-						String SQLaddPlace = "insert into Plats(PlatsNamn) values";
+						String SQLaddPlace = "insert into Affar(AffarNamn, AffarPlats) values";
 						
-						for(int i = 1; i < locationList.size(); i++) {
-							if(i + 1 < locationList.size()) {
-								try {
-									ResultSet alreadyThere = Main.SQL
+						for(int i = 1; i < affarList.size(); i++) {
+							try {
+								String[] columns = affarList.get(i).split(",");
+								
+								ResultSet alreadyThere = Main.SQL
 										.sendResultQuery(
-										"select * from plats where PlatsNamn = '"+
-										locationList.get(i)+"'");
+										"select * from Affar where AffarNamn = '"+
+										columns[0]+"' and AffarPlats = ("
+										+"select PlatsId from Plats "
+										+ "where PlatsNamn = '"+columns[1]+"')");
+								
+								
+								if(i + 1 < affarList.size()) {
 									
 									if(alreadyThere.next()) {
 										alreadyThere.close();
 										continue;
 									}
 									alreadyThere.close();
-									
-								} catch (Exception error) {
-									error.printStackTrace();
+										
+									SQLaddPlace += "('"+columns[0]+"', ("
+									+ "select PlatsId from Plats "
+									+ "where PlatsNamn = '"+columns[1]+"')"
+									+ "),";
 								}
-								SQLaddPlace += "('"+locationList.get(i)+"'),";
-							}
-							else {
-								try {
-									ResultSet alreadyThere = Main.SQL
-										.sendResultQuery(
-										"select * from plats where PlatsNamn = '"+
-										locationList.get(i)+"'");
+								else {
 									
 									if(alreadyThere.next()) {
 										alreadyThere.close();
@@ -222,11 +224,70 @@ public class AddToRow extends JFrame implements ActionListener{
 										continue;
 									}
 									alreadyThere.close();
-									
-								} catch (Exception error) {
-									error.printStackTrace();
+										
+									SQLaddPlace += "('"+columns[0]+"', ("
+											+ "select PlatsId from Plats "
+											+ "where PlatsNamn = '"+columns[1]+"')"
+											+ ");";
 								}
-								SQLaddPlace += "('"+locationList.get(i)+"');";
+							} catch (Exception error) {
+								error.printStackTrace();
+							}
+						}
+						System.out.println(SQLaddPlace);
+						
+						Main.SQL.sendVoidQuery(SQLaddPlace);
+						
+					} else {
+						JOptionPane.showMessageDialog(
+							null, 
+							affarList.get(1), 
+							"Error", JOptionPane.ERROR_MESSAGE, 
+							null
+						);
+					}
+				}
+				
+				if(addMethod == TypeOfAdd.LOCATION) {
+					LinkedList<String> locationList = Reader.readFile(
+							jfile.getSelectedFile(), "[A-Za-z0-9åäöÅÄÖ ]+");
+					
+					if(locationList.get(0).equals("0")) {
+						
+						String SQLaddPlace = "insert into Plats(PlatsNamn) values";
+						
+						for(int i = 1; i < locationList.size(); i++) {
+							try {
+								
+								ResultSet alreadyThere = Main.SQL
+										.sendResultQuery(
+										"select * from plats where PlatsNamn = '"+
+										locationList.get(i)+"'");
+								
+								
+								if(i + 1 < locationList.size()) {
+									
+									if(alreadyThere.next()) {
+										alreadyThere.close();
+										continue;
+									}
+									alreadyThere.close();
+										
+									SQLaddPlace += "('"+locationList.get(i)+"'),";
+								}
+								else {
+									
+									if(alreadyThere.next()) {
+										alreadyThere.close();
+										SQLaddPlace = SQLaddPlace.replaceFirst(".$", ";");
+										continue;
+									}
+									alreadyThere.close();
+										
+									SQLaddPlace += "('"+locationList.get(i)+"');";
+								}
+							} catch (Exception error) {
+								error.printStackTrace();
 							}
 						}
 						
