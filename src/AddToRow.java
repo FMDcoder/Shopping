@@ -3,7 +3,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
+import java.util.TimeZone;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -17,9 +21,12 @@ public class AddToRow extends JFrame implements ActionListener{
 	public JButton submit = new JButton("Lägg till"),
 			submitFile = new JButton("Fil inlägg");
 	
-	public JTextField inputField = new JTextField();
+	public JTextField inputField = new JTextField(),
+			year = new JTextField(),
+			month = new JTextField(),
+			day = new JTextField();
 	
-	public JComboBox altoption;
+	public JComboBox<String> altoption;
 	
 	public TypeOfAdd addMethod;
 	public Scene owner;
@@ -51,10 +58,10 @@ public class AddToRow extends JFrame implements ActionListener{
 			break;
 		}
 		
-		submit.setBounds(20, 200, 100, 30);
+		submit.setBounds(20, 220, 100, 30);
 		submit.addActionListener(this);
 		
-		submitFile.setBounds(160, 200, 100, 30);
+		submitFile.setBounds(160, 220, 100, 30);
 		submitFile.addActionListener(this);
 		
 		this.add(submit);
@@ -62,7 +69,79 @@ public class AddToRow extends JFrame implements ActionListener{
 	}
 	
 	public void shoppingComponents() {
+		JLabel titel = new JLabel();
+		titel.setText("Lägg till handel");
+		titel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
+		titel.setBounds(0, 10, 300, 50);
+		titel.setHorizontalAlignment(JLabel.CENTER);
+		this.add(titel);
 		
+		JLabel costDescription = new JLabel();
+		costDescription.setText("Kostnad");
+		costDescription.setBounds(50, 55, 100, 30);
+		this.add(costDescription);
+		
+		inputField.setBounds(50, 85, 70, 30);
+		this.add(inputField);
+		
+		JLabel DateDescription = new JLabel();
+		DateDescription.setText("Datum");
+		DateDescription.setBounds(150, 55, 100, 30);
+		this.add(DateDescription);
+		
+		Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+		
+		int yearI = cal.get(Calendar.YEAR),
+			monthI = cal.get(Calendar.MONTH) + 1,
+			dayI = cal.get(Calendar.DAY_OF_MONTH);
+		
+		String dayStr= dayI < 10 ? "0"+dayI : ""+dayI,
+				monthStr = monthI < 10 ? "0"+monthI : ""+monthI,
+				yearStr = ""+yearI;
+		
+		year.setBounds(150, 85, 40, 30);
+		year.setText(yearStr);
+		this.add(year);
+		
+		month.setBounds(190, 85, 30, 30);
+		month.setText(monthStr);
+		this.add(month);
+		
+		day.setBounds(220, 85, 30, 30);
+		day.setText(dayStr);
+		this.add(day);
+		
+		JLabel locationDescription = new JLabel();
+		locationDescription.setText("Affär");
+		locationDescription.setBounds(50, 115, 200, 30);
+		this.add(locationDescription);
+		
+		ResultSet locations = Main.SQL.sendResultQuery(
+				"select AffarNamn, PlatsNamn from"
+				+" Affar join Plats on AffarPlats = PlatsId");
+		
+		try {
+			ArrayList<String> locationList = new ArrayList<>();
+			
+			while(locations.next()) {
+				String combinedAffar = locations.getString("AffarNamn")+
+						", "+locations.getString("PlatsNamn");
+				
+				locationList.add(combinedAffar);
+			}
+			
+			String[] arrayLocations = new String[locationList.size()];
+			arrayLocations = locationList.toArray(arrayLocations);
+			
+			altoption = new JComboBox<String>(arrayLocations);
+			altoption.setBounds(50, 145, 200, 30);
+			this.add(altoption);
+			
+			locations.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
 	}
 	
 	public void shopComponents() {
