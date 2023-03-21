@@ -21,10 +21,9 @@ public class AddToRow extends JFrame implements ActionListener{
 	public JButton submit = new JButton("Lägg till"),
 			submitFile = new JButton("Fil inlägg");
 	
-	public JTextField inputField = new JTextField(),
-			year = new JTextField(),
-			month = new JTextField(),
-			day = new JTextField();
+	public String date, time;
+	
+	public JTextField inputField = new JTextField();
 	
 	public JComboBox<String> altoption;
 	
@@ -81,67 +80,76 @@ public class AddToRow extends JFrame implements ActionListener{
 		costDescription.setBounds(50, 55, 100, 30);
 		this.add(costDescription);
 		
-		inputField.setBounds(50, 85, 70, 30);
+		inputField.setBounds(50, 85, 200, 30);
 		this.add(inputField);
-		
-		JLabel DateDescription = new JLabel();
-		DateDescription.setText("Datum");
-		DateDescription.setBounds(150, 55, 100, 30);
-		this.add(DateDescription);
-		
-		Calendar cal = Calendar.getInstance(TimeZone.getDefault());
-		
-		int yearI = cal.get(Calendar.YEAR),
-			monthI = cal.get(Calendar.MONTH) + 1,
-			dayI = cal.get(Calendar.DAY_OF_MONTH);
-		
-		String dayStr= dayI < 10 ? "0"+dayI : ""+dayI,
-				monthStr = monthI < 10 ? "0"+monthI : ""+monthI,
-				yearStr = ""+yearI;
-		
-		year.setBounds(150, 85, 40, 30);
-		year.setText(yearStr);
-		this.add(year);
-		
-		month.setBounds(190, 85, 30, 30);
-		month.setText(monthStr);
-		this.add(month);
-		
-		day.setBounds(220, 85, 30, 30);
-		day.setText(dayStr);
-		this.add(day);
 		
 		JLabel locationDescription = new JLabel();
 		locationDescription.setText("Affär");
 		locationDescription.setBounds(50, 115, 200, 30);
 		this.add(locationDescription);
 		
-		ResultSet locations = Main.SQL.sendResultQuery(
+		ResultSet shop = Main.SQL.sendResultQuery(
 				"select AffarNamn, PlatsNamn from"
 				+" Affar join Plats on AffarPlats = PlatsId");
 		
 		try {
-			ArrayList<String> locationList = new ArrayList<>();
+			ArrayList<String> shopList = new ArrayList<>();
 			
-			while(locations.next()) {
-				String combinedAffar = locations.getString("AffarNamn")+
-						", "+locations.getString("PlatsNamn");
+			while(shop.next()) {
+				String combinedAffar = shop.getString("AffarNamn")+
+						", "+shop.getString("PlatsNamn");
 				
-				locationList.add(combinedAffar);
+				shopList.add(combinedAffar);
 			}
 			
-			String[] arrayLocations = new String[locationList.size()];
-			arrayLocations = locationList.toArray(arrayLocations);
+			String[] arrayShops = new String[shopList.size()];
+			arrayShops = shopList.toArray(arrayShops);
 			
-			altoption = new JComboBox<String>(arrayLocations);
+			altoption = new JComboBox<String>(arrayShops);
 			altoption.setBounds(50, 145, 200, 30);
 			this.add(altoption);
 			
-			locations.close();
+			shop.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	
+		
+		Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+		
+		int yearINT = cal.get(Calendar.YEAR),
+			monthINT = cal.get(Calendar.MONTH) + 1,
+			dayINT = cal.get(Calendar.DAY_OF_MONTH),
+			hourINT = cal.get(Calendar.HOUR_OF_DAY),
+			minuteINT = cal.get(Calendar.MINUTE);
+		
+		String yearStr = ""+yearINT,
+				
+				monthStr = monthINT < 10 ? "0"+monthINT : ""+monthINT,
+						
+				dayStr = dayINT < 10 ? "0"+dayINT : ""+dayINT,
+						
+				hourStr = hourINT < 10 ? "0"+hourINT : ""+hourINT,
+						
+				minuteStr = minuteINT < 10 ? "0"+minuteINT : ""+minuteINT;
+		
+		date = String.join("-", new String[] {yearStr, monthStr, dayStr});
+		time = String.join(":", new String[] {hourStr, minuteStr, "00"});
+		
+		JLabel timeDescription = new JLabel();
+		timeDescription.setText(date+", "+time);
+		timeDescription.setBounds(50, 175, 120, 30);
+		this.add(timeDescription);
+		
+		JButton changeTime = new JButton("Ändra"); 
+		changeTime.setBounds(170, 180, 80, 25);
+		this.add(changeTime);
+		
+		changeTime.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new Time();
+			}
+		});
 	}
 	
 	public void shopComponents() {
@@ -185,7 +193,7 @@ public class AddToRow extends JFrame implements ActionListener{
 			locations.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}			
 	}
 
 	public void locationComponents() {

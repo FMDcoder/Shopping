@@ -64,18 +64,4 @@ public class MySQL {
 			e.printStackTrace();
 		}
 	}
-	
-	public boolean exists(String sql) {
-		try {
-
-			ResultSet result = sendResultQuery(sql);
-			boolean value = result.next();
-			result.close();
-			return value;
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
 }
