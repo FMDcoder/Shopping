@@ -1,22 +1,23 @@
-
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.TimeZone;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 public class Time extends JFrame implements ActionListener  {
 	
 	public int yearINT, monthINT, dayINT, hourINT, minuteINT;
 	public String date, time;
+	
+	public JTextField hour, minute, year, month, day;
+	
+	public JComboBox<String> timeOfDay;
 	
 	public void window() {
 		this.setSize(300, 300);
@@ -36,10 +37,13 @@ public class Time extends JFrame implements ActionListener  {
 	}
 	
 	public void createComponents() {
-		JButton button = new JButton("Klar");
-		button.setBounds(100, 220, 100, 30);
-		button.addActionListener(this);
-		this.add(button);
+		
+		JLabel titel = new JLabel();
+		titel.setText("Tid och Datum");
+		titel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
+		titel.setBounds(0, 10, 300, 50);
+		titel.setHorizontalAlignment(JLabel.CENTER);
+		this.add(titel);
 		
 		Calendar cal = Calendar.getInstance(TimeZone.getDefault());
 		
@@ -62,82 +66,58 @@ public class Time extends JFrame implements ActionListener  {
 		date = String.join("-", yearStr, monthStr, dayStr);
 		time = String.join(":", hourStr, minuteStr, "00");
 		
-		JButton decHour = new JButton("< Timmar");
-		decHour.setBounds(20, 130, 90, 20);
-		this.add(decHour);
+		JLabel timelabel = new JLabel();
+		timelabel.setText("Tid (HH:MM)");
+		timelabel.setBounds(50, 50, 200, 30);
+		this.add(timelabel);
 		
-		JButton incHour = new JButton("Timmar >");
-		incHour.setBounds(190, 130, 90, 20);
-		this.add(incHour);
+		hour = new JTextField(hourStr);
+		hour.setBounds(50, 80, 30, 30);
+		this.add(hour);
 		
-	}
-	
-	@Override
-	public void paint(Graphics g) {		
-		Graphics2D g2 = (Graphics2D)g;
-	
-		g2.clearRect(0, 0, 300, 300);
+		JLabel seperatorHHMM = new JLabel(":");
+		seperatorHHMM.setBounds(80, 80, 10, 30);
+		seperatorHHMM.setFont(new Font(Font.DIALOG, Font.BOLD, 18));
+		seperatorHHMM.setHorizontalAlignment(JLabel.CENTER);
+		this.add(seperatorHHMM);
 		
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-				RenderingHints.VALUE_ANTIALIAS_ON);
+		minute = new JTextField(minuteStr);
+		minute.setBounds(90, 80, 30, 30);
+		this.add(minute);
 		
-		g2.setColor(Color.GRAY);
-		g2.fillOval(100, 50, 100, 100);
+		JLabel datelabel = new JLabel();
+		datelabel.setText("Datum (YYYY/MM/DD)");
+		datelabel.setBounds(50, 130, 200, 30);
+		this.add(datelabel);
 		
-		g2.setColor(Color.DARK_GRAY);
-		g2.setStroke(new BasicStroke(3));
-		g2.drawOval(100, 50, 100, 100);
+		year = new JTextField(yearStr);
+		year.setBounds(50, 160, 60, 30);
+		this.add(year);
 		
-		for(int i = 0; i < 60; i++) {
-			double angle = (i / 60.0) * 2 * Math.PI - Math.PI / 2;
-			
-			int strokeSize = i % 5 == 0 ? 2 : 1;
-			
-			g2.setStroke(new BasicStroke(strokeSize));
-			
-			int xp1 = (int)Math.round(Math.cos(angle) * 49 + 150),
-				yp1 = (int)Math.round(Math.sin(angle) * 49 + 100),
-				xp2 = (int)Math.round(Math.cos(angle) * 47 + 150),
-				yp2 = (int)Math.round(Math.sin(angle) * 47 + 100);
-			
-			g2.drawLine(xp1, yp1, xp2, yp2);
-				
-		}
+		JLabel seperatorYYYYMM = new JLabel("/");
+		seperatorYYYYMM.setBounds(110, 160, 10, 30);
+		seperatorYYYYMM.setFont(new Font(Font.DIALOG, Font.BOLD, 18));
+		seperatorYYYYMM.setHorizontalAlignment(JLabel.CENTER);
+		this.add(seperatorYYYYMM);
 		
-		g2.setColor(Color.BLACK);
-		for(int i = 0; i < 12; i++) {
-			double  angle = ((i + 1) / 12.0) * 2 * Math.PI - Math.PI / 2;
-			
-			int xPosText = (int)(Math.cos(angle) * 40 + 146),
-				yPosText = (int)(Math.sin(angle) * 40 + 105);
-			
-			g2.drawString(""+(i + 1), xPosText, yPosText);
-		}
+		month = new JTextField(monthStr);
+		month.setBounds(120, 160, 30, 30);
+		this.add(month);
 		
+		JLabel seperatorMMDD = new JLabel("/");
+		seperatorMMDD.setBounds(150, 160, 10, 30);
+		seperatorMMDD.setFont(new Font(Font.DIALOG, Font.BOLD, 18));
+		seperatorMMDD.setHorizontalAlignment(JLabel.CENTER);
+		this.add(seperatorMMDD);
 		
-		double radMinute = (minuteINT / 60.0) * 2 * Math.PI - Math.PI / 2;
+		day = new JTextField(dayStr);
+		day.setBounds(160, 160, 30, 30);
+		this.add(day);
 		
-		int posXMin = (int)(Math.cos(radMinute) * 40 + 150),
-			posYMin = (int)(Math.sin(radMinute) * 40 + 100); 
-		
-		g2.setStroke(new BasicStroke(2));
-		g2.drawLine(150, 100, posXMin, posYMin);
-		
-		double radHour = (hourINT / 12.0) * 2 * Math.PI - Math.PI / 2;
-		
-		int posXHour = (int)(Math.cos(radHour) * 30 + 150),
-			posYHour = (int)(Math.sin(radHour) * 30 + 100); 
-		
-		g2.setColor(Color.BLACK);
-		g2.setStroke(new BasicStroke(2));
-		g2.drawLine(150, 100, posXHour, posYHour);
-		
-		for(Component comp: this.getComponents()) {
-			comp.paintAll(g2);
-		}
-		
-		g2.dispose();
-		g.dispose();
+		JButton button = new JButton("Klar");
+		button.setBounds(100, 220, 100, 30);
+		button.addActionListener(this);
+		this.add(button);
 	}
 
 	@Override
