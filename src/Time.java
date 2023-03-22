@@ -1,6 +1,7 @@
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.YearMonth;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -8,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class Time extends JFrame implements ActionListener  {
@@ -17,7 +19,11 @@ public class Time extends JFrame implements ActionListener  {
 	
 	public JTextField hour, minute, year, month, day;
 	
+	public JButton submit;
+	
 	public JComboBox<String> timeOfDay;
+	
+	public AddToRow owner;
 	
 	public void window() {
 		this.setSize(300, 300);
@@ -28,11 +34,10 @@ public class Time extends JFrame implements ActionListener  {
 		this.setVisible(true);
 	}
 	
-	public Time() {
-		window();
-		this.revalidate();
-		this.repaint();
+	public Time(AddToRow owner) {
+		this.owner = owner;
 		
+		window();	
 		createComponents();
 	}
 	
@@ -114,15 +119,58 @@ public class Time extends JFrame implements ActionListener  {
 		day.setBounds(160, 160, 30, 30);
 		this.add(day);
 		
-		JButton button = new JButton("Klar");
-		button.setBounds(100, 220, 100, 30);
-		button.addActionListener(this);
-		this.add(button);
+		submit = new JButton("Klar");
+		submit.setBounds(100, 220, 100, 30);
+		submit.addActionListener(this);
+		this.add(submit);
+	}
+	
+	public void checkNumber(String str,int lowerLimit, int upperLimit, String name) throws Exception {
+		String digitRegex = "[-]{0,1}\\d+";
+		if(!str.matches(digitRegex)) {
+			throw new Exception(name+" är inte ett nummer!");
+		}
+		
+		int value = Integer.valueOf(str);
+		if(value > upperLimit) {
+			throw new Exception(name+" är högre än vad är giltigt! (Max: "+upperLimit+")");
+		}
+		else if(value < lowerLimit) {
+			throw new Exception(name+" får inte vara lägre än "+lowerLimit+"!");
+		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
+		if(e.getSource() == submit)
+			try {
+				
+				String hourStr = hour.getText(),
+					   minuteStr = minute.getText(),
+					   yearStr = year.getText(),
+					   monthStr = month.getText(),
+					   dayStr = day.getText();
+				
+				checkNumber(hourStr, 0, 23, "Timmar");
+				checkNumber(minuteStr, 0, 59, "Minuter");
+				checkNumber(yearStr, 0, Integer.MAX_VALUE, "År");
+				checkNumber(monthStr, 1, 12, "Månader");
+				
+				int yearINT = Integer.valueOf(yearStr),
+					monthINT = Integer.valueOf(monthStr);
+				
+				int totalDaysInMonth = YearMonth.of(yearINT, monthINT).lengthOfMonth();
+				
+				checkNumber(dayStr, 1, totalDaysInMonth, "Dagar");
+				
+				
+			} catch (Exception error) {
+				JOptionPane.showMessageDialog(
+					null, 
+					error.getMessage(),
+					"Error",
+					JOptionPane.ERROR_MESSAGE
+				);
+			}
 	}
 }

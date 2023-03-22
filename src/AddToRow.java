@@ -19,7 +19,8 @@ public class AddToRow extends JFrame implements ActionListener{
 	};
 	
 	public JButton submit = new JButton("Lägg till"),
-			submitFile = new JButton("Fil inlägg");
+			submitFile = new JButton("Fil inlägg"),
+			changeTime = new JButton("Ändra");
 	
 	public String date, time;
 	
@@ -69,7 +70,7 @@ public class AddToRow extends JFrame implements ActionListener{
 	
 	public void shoppingComponents() {
 		JLabel titel = new JLabel();
-		titel.setText("Lägg till handel");
+		titel.setText("Lägg till Handel");
 		titel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
 		titel.setBounds(0, 10, 300, 50);
 		titel.setHorizontalAlignment(JLabel.CENTER);
@@ -139,22 +140,15 @@ public class AddToRow extends JFrame implements ActionListener{
 		timeDescription.setText(date+", "+time);
 		timeDescription.setBounds(50, 175, 120, 30);
 		this.add(timeDescription);
-		
-		JButton changeTime = new JButton("Ändra"); 
+		 
 		changeTime.setBounds(170, 180, 80, 25);
+		changeTime.addActionListener(this);
 		this.add(changeTime);
-		
-		changeTime.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				new Time();
-			}
-		});
 	}
 	
 	public void shopComponents() {
 		JLabel titel = new JLabel();
-		titel.setText("Lägg till affär");
+		titel.setText("Lägg Till Affär");
 		titel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
 		titel.setBounds(0, 10, 300, 50);
 		titel.setHorizontalAlignment(JLabel.CENTER);
@@ -199,7 +193,7 @@ public class AddToRow extends JFrame implements ActionListener{
 	public void locationComponents() {
 		
 		JLabel titel = new JLabel();
-		titel.setText("Lägg till plats");
+		titel.setText("Lägg till Plats");
 		titel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
 		titel.setBounds(0, 10, 300, 50);
 		titel.setHorizontalAlignment(JLabel.CENTER);
@@ -397,6 +391,10 @@ public class AddToRow extends JFrame implements ActionListener{
 			
 			Main.currentPanel = owner.getPanel();
 			Main.panel.add(Main.currentPanel);
+		}
+		
+		if(e.getSource() == changeTime) {
+			new Time(this);
 		}
 	}
 }
