@@ -163,7 +163,26 @@ public class Time extends JFrame implements ActionListener  {
 				
 				checkNumber(dayStr, 1, totalDaysInMonth, "Dagar");
 				
+				int hourINT = Integer.valueOf(hourStr),
+					minuteINT = Integer.valueOf(minuteStr),
+					dayINT = Integer.valueOf(dayStr);
 				
+				yearStr = ""+yearINT;
+						
+				monthStr = monthINT < 10 ? "0"+monthINT : ""+monthINT;
+						
+				dayStr = dayINT < 10 ? "0"+dayINT : ""+dayINT;
+						
+				hourStr = hourINT < 10 ? "0"+hourINT : ""+hourINT;
+						
+				minuteStr = minuteINT < 10 ? "0"+minuteINT : ""+minuteINT;
+				
+				owner.date = String.join("-", new String[] {yearStr, monthStr, dayStr});
+				owner.time = String.join(":", new String[] {hourStr, minuteStr, "00"});
+				
+				owner.timeDescription.setText(owner.date+", "+owner.time);
+				
+				this.setVisible(false);
 			} catch (Exception error) {
 				JOptionPane.showMessageDialog(
 					null, 

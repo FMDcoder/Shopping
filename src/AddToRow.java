@@ -28,6 +28,8 @@ public class AddToRow extends JFrame implements ActionListener{
 	
 	public JComboBox<String> altoption;
 	
+	public JLabel timeDescription;
+	
 	public TypeOfAdd addMethod;
 	public Scene owner;
 	
@@ -136,7 +138,7 @@ public class AddToRow extends JFrame implements ActionListener{
 		date = String.join("-", new String[] {yearStr, monthStr, dayStr});
 		time = String.join(":", new String[] {hourStr, minuteStr, "00"});
 		
-		JLabel timeDescription = new JLabel();
+		timeDescription = new JLabel();
 		timeDescription.setText(date+", "+time);
 		timeDescription.setBounds(50, 175, 120, 30);
 		this.add(timeDescription);
