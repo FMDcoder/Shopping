@@ -52,6 +52,7 @@ public class MySQL {
 	
 	public void sendVoidQuery(String sql) {
 		try {
+			
 			connect();
 			
 			Statement state = con.createStatement();

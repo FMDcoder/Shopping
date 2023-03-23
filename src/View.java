@@ -87,13 +87,19 @@ public class View extends Scene implements ActionListener {
 			}
 			
 			String date = paymentTable.getValueAt(selected, 0).toString(),
-				   time = paymentTable.getValueAt(selected, 3).toString();
+				   shop = paymentTable.getValueAt(selected, 1).toString(),
+				   location = paymentTable.getValueAt(selected, 2).toString(),
+				   time = paymentTable.getValueAt(selected, 3).toString(),
+				   cost = paymentTable.getValueAt(selected, 4).toString();
 						
 			Main.SQL.sendVoidQuery(
-					"delete from handel where HandelDatumId = (\r\n"
-					+ "	select DatumId from Datum where Datum = '"+date+"')\r\n"
-					+ "and \r\n"
-					+ "	tid = '"+time+"';");
+					"delete from handel where HandelDatumId = ("
+					+ "select DatumId from Datum where Datum = '"+date+"')"
+					+ "and HandelAffarId = ("
+					+ "select AffarId from Affar where AffarNamn = '"+shop+"' and AffarPlats = ("
+					+ "select PlatsId from Plats where PlatsNamn = '"+location+"')"
+					+ ") and"
+					+ " Tid = '"+time+"' and Kostnad = '"+cost+"'");
 			
 			getPanel();
 		}

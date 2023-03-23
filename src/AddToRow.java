@@ -214,6 +214,52 @@ public class AddToRow extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == submit) {
 			
+			if(addMethod == TypeOfAdd.SHOPPING) {
+				String cost = inputField.getText();
+				
+				String[] placeshop = ((String)altoption.getSelectedItem()).split(", ");
+				
+				if(!cost.matches("[-]{0,1}[0-9]+")) {
+					JOptionPane.showMessageDialog(
+							null, 
+							"Ogilitga karaktärer finns i fältet, Endast nummer!", 
+							"Error", JOptionPane.ERROR_MESSAGE, 
+							null
+					);
+					return;
+				}
+				
+				int num = Integer.valueOf(cost);
+				
+				if(num <= 0) {
+					JOptionPane.showMessageDialog(
+							null, 
+							"Kostnaden måste vara högre än 0!", 
+							"Error", JOptionPane.ERROR_MESSAGE, 
+							null
+					);
+					return;
+				}
+				
+				ResultSet existsDate = Main.SQL.sendResultQuery(
+						"select * from Datum where Datum = '"+date+"'");
+				try {
+					if(!existsDate.next()) {
+						Main.SQL.sendVoidQuery(
+								"insert into Datum(Datum) values('"+date+"')");
+					}
+				} catch (Exception error) {
+					error.printStackTrace();
+				}
+				
+				Main.SQL.sendVoidQuery("insert into handel(HandelAffarId, HandelDatumId, Kostnad, Tid) values ("
+						+ "(select AffarId from Affar where AffarNamn = "
+						+ "'"+placeshop[0]+"' and AffarPlats = ("
+						+ "select PlatsId from Plats where PlatsNamn = '"+placeshop[1]+"')),"
+						+ "(select DatumId from Datum where Datum = '"+date+"'),"
+						+ cost+", '"+time+"');");
+			}
+			
 			if(addMethod == TypeOfAdd.SHOP) {
 				String shop = inputField.getText(),
 						place = (String)altoption.getSelectedItem();
