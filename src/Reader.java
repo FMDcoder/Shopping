@@ -6,6 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 
 public class Reader {
+	
+	// Reads file and checks each row for a desired structure
 	public static LinkedList<String> readFile(File file, String regex) {
 		LinkedList<String> list = new LinkedList<>();
 		
