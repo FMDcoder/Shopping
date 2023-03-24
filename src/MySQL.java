@@ -4,13 +4,17 @@ import javax.swing.JOptionPane;
 
 public class MySQL {
 	
+	
+	// Database authentication
 	private String 
-		username = "root",
-		password = "031218MIa%%%",
+		username = "username",
+		password = "password",
 		url = "jdbc:mysql://localhost:3306/handel";
 	
 	private Connection con;
 	
+	
+	// Attempts to connect to database
 	private void connect() {
 		try {
 			con = DriverManager.getConnection(url, username, password);
@@ -27,6 +31,7 @@ public class MySQL {
 		}
 	}
 	
+	// disconnects from database
 	public void disconnect() {
 		try {
 			con.close();
@@ -35,6 +40,7 @@ public class MySQL {
 		}
 	}
 	
+	// return result from a SQL query
 	public ResultSet sendResultQuery(String sql) {
 		try {
 			connect();
@@ -50,6 +56,7 @@ public class MySQL {
 		return null;
 	}
 	
+	// sends Query but return no result
 	public void sendVoidQuery(String sql) {
 		try {
 			
