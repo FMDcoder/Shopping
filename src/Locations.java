@@ -14,6 +14,8 @@ public class Locations extends Scene implements ActionListener {
 	public JButton remove = new JButton("Ta bort rad"),
 			add = new JButton("Lägg till");
 	
+	
+	// Init scene location
 	public Locations() {
 		panel.setBounds(0, 30, 500, 470);
 		panel.setLayout(null);
@@ -40,6 +42,8 @@ public class Locations extends Scene implements ActionListener {
 		panel.add(remove);
 	}
 	
+	
+	// gets the updated Scene
 	public JPanel getPanel() {
 		
 		ResultSet locationResult = Main.SQL.sendResultQuery("select PlatsNamn from Plats;");
@@ -56,8 +60,10 @@ public class Locations extends Scene implements ActionListener {
 		return panel;
 	}
 
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		// remove row if selected
 		if(e.getSource() == remove) {
 			int selected = locationTable.getSelectedRow();
 			
@@ -84,6 +90,7 @@ public class Locations extends Scene implements ActionListener {
 			getPanel();
 		}
 		
+		// init AddToRow for location 
 		if(e.getSource() == add) {
 			new AddToRow(AddToRow.TypeOfAdd.LOCATION, this);
 		}
