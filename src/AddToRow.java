@@ -33,6 +33,8 @@ public class AddToRow extends JFrame implements ActionListener{
 	public TypeOfAdd addMethod;
 	public Scene owner;
 	
+	
+	// Creates window
 	public void window() {
 		this.setSize(300, 300);
 		this.setTitle("L‰gg till");
@@ -42,6 +44,7 @@ public class AddToRow extends JFrame implements ActionListener{
 		this.setVisible(true);
 	}
 	
+	// Init Add to row depending on the scene
 	public AddToRow(TypeOfAdd addmethod, Scene owner) {
 		window();
 		
@@ -70,6 +73,7 @@ public class AddToRow extends JFrame implements ActionListener{
 		this.add(submitFile);
 	}
 	
+	// creates and adds the components for shopping in order to add purchases
 	public void shoppingComponents() {
 		JLabel titel = new JLabel();
 		titel.setText("L‰gg till Handel");
@@ -148,6 +152,7 @@ public class AddToRow extends JFrame implements ActionListener{
 		this.add(changeTime);
 	}
 	
+	// create and adds components to give the ability to add shops with locations assigned to shop
 	public void shopComponents() {
 		JLabel titel = new JLabel();
 		titel.setText("L‰gg Till Aff‰r");
@@ -192,6 +197,7 @@ public class AddToRow extends JFrame implements ActionListener{
 		}			
 	}
 
+	// create and add components for location to be able to add locations
 	public void locationComponents() {
 		
 		JLabel titel = new JLabel();
@@ -210,10 +216,14 @@ public class AddToRow extends JFrame implements ActionListener{
 		this.add(inputField);
 	}
 
+	// handles user interface submits and file submits
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
+		// UI submits
 		if(e.getSource() == submit) {
 			
+			// handles UI submits for purchases 
 			if(addMethod == TypeOfAdd.SHOPPING) {
 				String cost = inputField.getText();
 				
@@ -260,6 +270,8 @@ public class AddToRow extends JFrame implements ActionListener{
 						+ cost+", '"+time+"');");
 			}
 			
+			
+			// handles UI submits for adding shops
 			if(addMethod == TypeOfAdd.SHOP) {
 				String shop = inputField.getText(),
 						place = (String)altoption.getSelectedItem();
@@ -280,6 +292,8 @@ public class AddToRow extends JFrame implements ActionListener{
 								+ "where PlatsNamn = '"+place+"'));");
 			}
 			
+			
+			// handles UI submits for locations
 			if(addMethod == TypeOfAdd.LOCATION) {
 				String loc = inputField.getText();
 				
@@ -304,6 +318,7 @@ public class AddToRow extends JFrame implements ActionListener{
 			Main.panel.add(Main.currentPanel);
 		}
 		
+		// File submits
 		if(e.getSource() == submitFile) {
 			
 			JFileChooser jfile = new JFileChooser();
@@ -314,6 +329,7 @@ public class AddToRow extends JFrame implements ActionListener{
 				
 				ArrayList<Integer> ignoredRow = new ArrayList<>();
 				
+				// Handles file submit for purchases
 				if(addMethod == TypeOfAdd.SHOPPING) {
 					
 					String regex = "^\\d{4}-\\d{2}-\\d{2},[A-Za-zÂ‰ˆ≈ƒ÷ ]+,[A-Za-zÂ‰ˆ≈ƒ÷ ]+,\\d{2}:\\d{2}:\\d{2},\\d+$";
@@ -365,7 +381,6 @@ public class AddToRow extends JFrame implements ActionListener{
 							}
 						}
 						
-						System.out.println(SQLaddShopping);
 						Main.SQL.sendVoidQuery(SQLaddShopping);
 						
 						if(ignoredRow.size() > 0) {
@@ -393,6 +408,7 @@ public class AddToRow extends JFrame implements ActionListener{
 						}
 				}
 				
+				// handles File submits for adding shops
 				if(addMethod == TypeOfAdd.SHOP) {
 					LinkedList<String> affarList = Reader.readFile(
 						jfile.getSelectedFile(), "^[A-Za-z0-9Â‰ˆ≈ƒ÷ ]+,[A-Za-z0-9Â‰ˆ≈ƒ÷ ]+$");
@@ -474,6 +490,7 @@ public class AddToRow extends JFrame implements ActionListener{
 					}
 				}
 				
+				// handles File submit for adding locations
 				if(addMethod == TypeOfAdd.LOCATION) {
 					LinkedList<String> locationList = Reader.readFile(
 							jfile.getSelectedFile(), "[A-Za-z0-9Â‰ˆ≈ƒ÷ ]+");
@@ -555,6 +572,7 @@ public class AddToRow extends JFrame implements ActionListener{
 			Main.panel.add(Main.currentPanel);
 		}
 		
+		// handles changing time for purchases 
 		if(e.getSource() == changeTime) {
 			new Time(this);
 		}
