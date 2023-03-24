@@ -132,7 +132,7 @@ public class Time extends JFrame implements ActionListener  {
 	
 	// checker function for the different fields 
 	public void checkNumber(String str,int lowerLimit, int upperLimit, String name) throws Exception {
-		String digitRegex = "[-]{0,1}\\d+";
+		String digitRegex = "^[-]{0,1}\\d+$";
 		if(!str.matches(digitRegex)) {
 			throw new Exception(name+" är inte ett nummer!");
 		}

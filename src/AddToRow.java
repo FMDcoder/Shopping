@@ -229,7 +229,7 @@ public class AddToRow extends JFrame implements ActionListener{
 				
 				String[] placeshop = ((String)altoption.getSelectedItem()).split(", ");
 				
-				if(!cost.matches("[-]{0,1}[0-9]+")) {
+				if(!cost.matches("^[-]{0,1}[0-9]+$")) {
 					JOptionPane.showMessageDialog(
 							null, 
 							"Ogilitga karaktärer finns i fältet, Endast nummer!", 
@@ -276,7 +276,7 @@ public class AddToRow extends JFrame implements ActionListener{
 				String shop = inputField.getText(),
 						place = (String)altoption.getSelectedItem();
 				
-				if(!shop.matches("[A-Za-z0-9åäöÅÄÖ ]+")) {
+				if(!shop.matches("^[A-Za-z0-9åäöÅÄÖ ]+$")) {
 					JOptionPane.showMessageDialog(
 							null, 
 							"Ogilitga karaktärer finns i fältet, endast A-Ö och blanksteg", 
@@ -297,7 +297,7 @@ public class AddToRow extends JFrame implements ActionListener{
 			if(addMethod == TypeOfAdd.LOCATION) {
 				String loc = inputField.getText();
 				
-				if(!loc.matches("[A-Za-zåäöÅÄÖ ]+")) {
+				if(!loc.matches("^[A-Za-zåäöÅÄÖ ]+$")) {
 					JOptionPane.showMessageDialog(
 							null, 
 							"Ogilitga karaktärer finns i fältet, endast A-Ö och blanksteg", 
@@ -493,7 +493,7 @@ public class AddToRow extends JFrame implements ActionListener{
 				// handles File submit for adding locations
 				if(addMethod == TypeOfAdd.LOCATION) {
 					LinkedList<String> locationList = Reader.readFile(
-							jfile.getSelectedFile(), "[A-Za-z0-9åäöÅÄÖ ]+");
+							jfile.getSelectedFile(), "^[A-Za-z0-9åäöÅÄÖ ]+$");
 					
 					if(locationList.get(0).equals("0")) {
 						
