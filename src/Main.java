@@ -13,6 +13,7 @@ public class Main extends JFrame implements ActionListener{
 	public Locations location = new Locations();
 	
 	
+	// creates window and add components that points to scenes
 	public void window() {
 		this.setSize(500, 500);
 		this.setLocationRelativeTo(null);
@@ -58,6 +59,7 @@ public class Main extends JFrame implements ActionListener{
 		new Main();
 	}
 
+	// gets the scene relative to the button and its "assigned" scene
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() instanceof JButton) {
 			JButton button = (JButton) e.getSource();
