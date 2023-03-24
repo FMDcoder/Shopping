@@ -14,6 +14,7 @@ public class Shop extends Scene implements ActionListener {
 	public JButton remove = new JButton("Ta bort rad"),
 			add = new JButton("Lägg till");
 	
+	// Creates shop and add components
 	public Shop() {
 		panel.setBounds(0, 30, 500, 470);
 		panel.setLayout(null);
@@ -40,6 +41,7 @@ public class Shop extends Scene implements ActionListener {
 		panel.add(remove);
 	}
 	
+	// Gets updated version of Scene
 	public JPanel getPanel() {
 		
 		ResultSet resultPlaces = Main.SQL.sendResultQuery(
@@ -69,6 +71,7 @@ public class Shop extends Scene implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		// Removes row if selected
 		if(e.getSource() == remove) {
 			int selected = shoplist.getSelectedRow();
 			
@@ -97,7 +100,7 @@ public class Shop extends Scene implements ActionListener {
 			);
 			getPanel();
 		}
-		
+		// Init AddToRow for adding shops
 		if(e.getSource() == add) {
 			new AddToRow(AddToRow.TypeOfAdd.SHOP, this);
 		}
