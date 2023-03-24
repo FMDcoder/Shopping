@@ -13,6 +13,7 @@ public class View extends Scene implements ActionListener {
 	public JButton remove = new JButton("Ta bort rad"),
 					add = new JButton("Lägg till");
 	
+	// Creates and adds components for purchases scene
 	public View() {
 		panel.setBounds(0, 30, 500, 470);
 		panel.setLayout(null);
@@ -41,6 +42,7 @@ public class View extends Scene implements ActionListener {
 		panel.add(remove);
 	}
 	
+	// gets updated scene
 	public JPanel getPanel() {
 		
 		ResultSet result = Main.SQL.sendResultQuery(
@@ -73,6 +75,8 @@ public class View extends Scene implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
+		// removes row if selected
 		if(e.getSource() == remove) {
 			int selected = paymentTable.getSelectedRow();
 			
@@ -104,6 +108,7 @@ public class View extends Scene implements ActionListener {
 			getPanel();
 		}
 		
+		// creates AddToRow for scene for adding purchases
 		if(e.getSource() == add) {
 			new AddToRow(AddToRow.TypeOfAdd.SHOPPING, this);
 		}
