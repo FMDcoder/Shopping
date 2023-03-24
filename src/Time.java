@@ -153,7 +153,7 @@ public class Time extends JFrame implements ActionListener  {
 				
 				checkNumber(hourStr, 0, 23, "Timmar");
 				checkNumber(minuteStr, 0, 59, "Minuter");
-				checkNumber(yearStr, 0, Integer.MAX_VALUE, "År");
+				checkNumber(yearStr, 0, 9999, "År");
 				checkNumber(monthStr, 1, 12, "Månader");
 				
 				int yearINT = Integer.valueOf(yearStr),

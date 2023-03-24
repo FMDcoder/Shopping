@@ -312,6 +312,87 @@ public class AddToRow extends JFrame implements ActionListener{
 			
 			if(jfile.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				
+				ArrayList<Integer> ignoredRow = new ArrayList<>();
+				
+				if(addMethod == TypeOfAdd.SHOPPING) {
+					
+					String regex = "^\\d{4}-\\d{2}-\\d{2},[A-Za-zåäöÅÄÖ ]+,[A-Za-zåäöÅÄÖ ]+,\\d{2}:\\d{2}:\\d{2},\\d+$";
+					
+					LinkedList<String> handelList = Reader.readFile(
+							jfile.getSelectedFile(), regex);
+					
+					if(handelList.get(0).equals("0")) {
+						String SQLaddShopping = "insert into handel(HandelAffarId, HandelDatumId, Kostnad, Tid) values";
+						
+						for(int i = 1; i < handelList.size(); i++) {
+							try {
+								String[] row = handelList.get(i).split(",");
+								
+								ResultSet existsShop = Main.SQL.sendResultQuery(
+										"select AffarId from Affar where AffarNamn = '"+row[1]+"' and"
+												+ " AffarPlats = (select PlatsId from Plats where PlatsNamn = '"+row[2]+"')");
+								System.out.println("select AffarId from Affar where AffarNamn = '"+row[1]+"' and"
+												+ " AffarPlats = (select PlatsId from Plats where PlatsNamn = '"+row[2]+"')");
+								if(!existsShop.next()) {
+									ignoredRow.add(i);
+									continue;
+								}
+								
+								ResultSet existsDate = Main.SQL.sendResultQuery(
+										"select * from Datum where Datum = '"+row[0]+"'");
+								
+								if(!existsDate.next()) {
+									Main.SQL.sendVoidQuery(
+										"insert into Datum(Datum) values('"+row[0]+"')");
+								}
+								existsDate.close();
+	
+								if(i + 1 < handelList.size()) {
+									SQLaddShopping += "("
+											+ "(select AffarId from Affar where AffarNamn = '"+row[1]+"' and"
+											+ " AffarPlats = (select PlatsId from Plats where PlatsNamn = '"+row[2]+"')),"
+											+ "(select DatumId from Datum where Datum = '"+row[0]+"'),"
+											+ "'"+row[4]+"','"+row[3]+"'),";
+								} else {
+									SQLaddShopping += "("
+											+ "(select AffarId from Affar where AffarNamn = '"+row[1]+"' and"
+											+ " AffarPlats = (select PlatsId from Plats where PlatsNamn = '"+row[2]+"')),"
+											+ "(select DatumId from Datum where Datum = '"+row[0]+"'),"
+											+ "'"+row[4]+"','"+row[3]+"');";
+								}
+							} catch (Exception error0) {
+								error0.printStackTrace();
+							}
+						}
+						
+						System.out.println(SQLaddShopping);
+						Main.SQL.sendVoidQuery(SQLaddShopping);
+						
+						if(ignoredRow.size() > 0) {
+							String ignored = "";
+							
+							for(Object i: ignoredRow.toArray()) {
+								ignored += String.valueOf(i)+" ";
+							}
+							
+							JOptionPane.showMessageDialog(
+								null, 
+								"Vissa rader saknar plats eller affär: "+ignored, 
+								"Ignorerad Rader", 
+								JOptionPane.INFORMATION_MESSAGE, null
+							);
+						}
+						
+					} else {
+						JOptionPane.showMessageDialog(
+								null, 
+								handelList.get(1), 
+								"Error", JOptionPane.ERROR_MESSAGE, 
+								null
+							);
+						}
+				}
+				
 				if(addMethod == TypeOfAdd.SHOP) {
 					LinkedList<String> affarList = Reader.readFile(
 						jfile.getSelectedFile(), "^[A-Za-z0-9åäöÅÄÖ ]+,[A-Za-z0-9åäöÅÄÖ ]+$");
@@ -336,6 +417,7 @@ public class AddToRow extends JFrame implements ActionListener{
 									
 									if(alreadyThere.next()) {
 										alreadyThere.close();
+										ignoredRow.add(i);
 										continue;
 									}
 									alreadyThere.close();
@@ -350,6 +432,7 @@ public class AddToRow extends JFrame implements ActionListener{
 									if(alreadyThere.next()) {
 										alreadyThere.close();
 										SQLaddPlace = SQLaddPlace.replaceFirst(".$", ";");
+										ignoredRow.add(i);
 										continue;
 									}
 									alreadyThere.close();
@@ -363,13 +446,27 @@ public class AddToRow extends JFrame implements ActionListener{
 								error.printStackTrace();
 							}
 						}
-						System.out.println(SQLaddPlace);
 						
 						Main.SQL.sendVoidQuery(SQLaddPlace);
 						
+						if(ignoredRow.size() > 0) {
+							String ignored = "";
+							
+							for(Object i: ignoredRow.toArray()) {
+								ignored += String.valueOf(i)+" ";
+							}
+							
+							JOptionPane.showMessageDialog(
+								null, 
+								"Vissa rader finns redan som: "+ignored, 
+								"Ignorerad Rader", 
+								JOptionPane.INFORMATION_MESSAGE, null
+							);
+						}
+						
 					} else {
 						JOptionPane.showMessageDialog(
-							null, 
+							null,
 							affarList.get(1), 
 							"Error", JOptionPane.ERROR_MESSAGE, 
 							null
@@ -398,6 +495,7 @@ public class AddToRow extends JFrame implements ActionListener{
 									
 									if(alreadyThere.next()) {
 										alreadyThere.close();
+										ignoredRow.add(i);
 										continue;
 									}
 									alreadyThere.close();
@@ -409,6 +507,7 @@ public class AddToRow extends JFrame implements ActionListener{
 									if(alreadyThere.next()) {
 										alreadyThere.close();
 										SQLaddPlace = SQLaddPlace.replaceFirst(".$", ";");
+										ignoredRow.add(i);
 										continue;
 									}
 									alreadyThere.close();
@@ -421,6 +520,21 @@ public class AddToRow extends JFrame implements ActionListener{
 						}
 						
 						Main.SQL.sendVoidQuery(SQLaddPlace);
+						
+						if(ignoredRow.size() > 0) {
+							String ignored = "";
+							
+							for(Object i: ignoredRow.toArray()) {
+								ignored += String.valueOf(i)+" ";
+							}
+							
+							JOptionPane.showMessageDialog(
+								null, 
+								"Vissa rader finns redan som: "+ignored, 
+								"Ignorerad Rader", 
+								JOptionPane.INFORMATION_MESSAGE, null
+							);
+						}
 						
 					} else {
 						JOptionPane.showMessageDialog(
