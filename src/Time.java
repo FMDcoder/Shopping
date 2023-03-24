@@ -25,6 +25,8 @@ public class Time extends JFrame implements ActionListener  {
 	
 	public AddToRow owner;
 	
+	
+	// Creates window
 	public void window() {
 		this.setSize(300, 300);
 		this.setResizable(false);
@@ -34,6 +36,7 @@ public class Time extends JFrame implements ActionListener  {
 		this.setVisible(true);
 	}
 	
+	// Init time 
 	public Time(AddToRow owner) {
 		this.owner = owner;
 		
@@ -41,6 +44,8 @@ public class Time extends JFrame implements ActionListener  {
 		createComponents();
 	}
 	
+	
+	// creates componets and adds components for date and time 
 	public void createComponents() {
 		
 		JLabel titel = new JLabel();
@@ -125,6 +130,7 @@ public class Time extends JFrame implements ActionListener  {
 		this.add(submit);
 	}
 	
+	// checker function for the different fields 
 	public void checkNumber(String str,int lowerLimit, int upperLimit, String name) throws Exception {
 		String digitRegex = "[-]{0,1}\\d+";
 		if(!str.matches(digitRegex)) {
@@ -140,6 +146,7 @@ public class Time extends JFrame implements ActionListener  {
 		}
 	}
 
+	// handles checking and set values for AddToRow if successful
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == submit)
